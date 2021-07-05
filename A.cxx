@@ -3,6 +3,7 @@
 //
 A::A (int id){
   name = id;
+  t->setInterval( 1000 );
   t->callOnTimeout(this, &A::processList);
 }
 
