@@ -1,21 +1,36 @@
-#ifndef A_H
-#define A_H
+///////////////////////////////////////////////////////////////////////////////
+#pragma once
+
+///////////////////////////////////////////////////////////////////////////////
 #include <QObject>
 #include <QList>
 #include <QTimer>
-class A : public QObject{
-  Q_OBJECT
+#include <QReadLocker>
+
+///////////////////////////////////////////////////////////////////////////////
+class A : public QObject
+{
+    Q_OBJECT
+
 public:
-  A( int id );
+    A(QReadWriteLock& lock, int id);
+
 public slots:
-  void processList();
-  void timing();
-  void makeUpdate( int update );
+    void processList();
+    void timing();
+    void makeUpdate(int update);
+
 private:
-  int name;
-  QList<int> list;
-  QList<int> buffer;
-  bool running = true;
-  QTimer *t = new QTimer(this); //witout 'this' as parent: QObject::killTimer: Timers cannot be stopped from another thread
+    int name;
+    QList<int> list;
+    QList<int> buffer;
+    bool running = true;
+    /* witout 'this' as parent: QObject::killTimer: Timers cannot be stopped 
+       from another thread */
+    QTimer *t = new QTimer(this); 
+    QReadWriteLock& m_lock;
 };
-#endif
+
+// end
+
+///////////////////////////////////////////////////////////////////////////////
